@@ -104,7 +104,7 @@ export default class AreaStackChart extends Component {
             onOk={this.onClose}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="网络连接错误"
+            title="网络连接错误!请刷新!"
             footerAlign={this.state.footerAlign}
           >
             <h3>获取天气数据失败</h3>
