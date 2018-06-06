@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import { Dialog, Loading } from '@icedesign/base';
+import { Dialog, Loading, Feedback } from '@icedesign/base';
 import { Chart, Geom, Axis, Tooltip, Legend } from 'bizcharts';
 import IceContainer from '@icedesign/container';
 
 const API_GET_CITY = 'http://pv.sohu.com/cityjson';
 const API_URL = 'https://free-api.heweather.com/s6/weather/forecast?location=auto_ip&key=2e47737475a842669c731c29ebc1fd5a';
+const Toast = Feedback.toast;
 export default class AreaStackChart extends Component {
   static displayName = 'AreaStackChart';
   constructor(props) {
@@ -51,12 +52,14 @@ export default class AreaStackChart extends Component {
       });
       return this.showView();
     } catch (error) {
+      Toast.error(`${error.message}|${error.stack}`);
       return this.setState({
         visible: true,
         dialogMessage: `${error.message}|${error.stack}`,
       });
     }
   }
+
   getCityDta() {
   /*  const instance = axios.create({
       withCredentials: false,
@@ -86,6 +89,7 @@ export default class AreaStackChart extends Component {
       });
     }).catch((error) => {
       console.log(error);
+      Toast.error(`${error.message}|${error.stack}`);
       this.setState({
         visible: true,
         dialogMessage: `${error.message}|${error.stack}`,

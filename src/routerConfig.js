@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import Page2 from './pages/Page2';
 import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout';
 
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import NotFound from './pages/NotFound';
 
 const routerConfig = [
@@ -19,6 +21,16 @@ const routerConfig = [
     path: '/page2',
     layout: HeaderAsideFooterResponsiveLayout,
     component: Page2,
+  },
+  {
+    path: '/loginPage',
+    layout: BlankLayout,
+    component: LoginPage,
+  },
+  {
+    path: '/registerPage',
+    layout: BlankLayout,
+    component: RegisterPage,
   },
   {
     path: '*',
