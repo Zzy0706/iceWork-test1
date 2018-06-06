@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { createHashHistory } from 'history';
 import { Input, Button, Checkbox, Grid, Feedback, Loading } from '@icedesign/base';
+import { Link } from 'react-router-dom';
+
 import {
   FormBinderWrapper as IceFormBinderWrapper,
   FormBinder as IceFormBinder,
@@ -171,13 +173,13 @@ export default class Login extends Component {
                 </Row>
 
                 <Row className="tips" style={styles.tips}>
-                  <a href="/" style={styles.link}>
+                  <Link to="/RegisterPage" style={styles.link}>
                     立即注册
-                  </a>
+                  </Link>
                   <span style={styles.line}>|</span>
-                  <a href="/" style={styles.link}>
+                  <Link to="/RegisterPage" style={styles.link}>
                     忘记密码
-                  </a>
+                  </Link>
                 </Row>
               </div>
             </IceFormBinderWrapper>

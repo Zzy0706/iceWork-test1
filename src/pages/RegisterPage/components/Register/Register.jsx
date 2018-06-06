@@ -1,6 +1,7 @@
 /* eslint react/no-string-refs:0 */
 import React, { Component } from 'react';
-import { Input, Button, Checkbox, Grid, Feedback } from '@icedesign/base';
+import axios from 'axios';
+import { Input, Button, Grid, Feedback, Select, Icon } from '@icedesign/base';
 import {
   FormBinderWrapper as IceFormBinderWrapper,
   FormBinder as IceFormBinder,
@@ -10,7 +11,12 @@ import IceIcon from '@icedesign/icon';
 import './Register.scss';
 
 const { Row, Col } = Grid;
-
+const REGISTER_API = '/sso/register/save';
+const RegisterData = [
+  '用户名',
+  '邮箱',
+  '手机',
+];
 export default class Register extends Component {
   static displayName = 'Register';
 
@@ -24,9 +30,15 @@ export default class Register extends Component {
       value: {
         username: '',
         email: '',
+        phoneNum: '',
         passwd: '',
         rePasswd: '',
       },
+      usernameIput: 'block',
+      emailIput: 'none',
+      phoneNumIput: 'none',
+      defaultValue: RegisterData[0],
+      visible: true,
     };
   }
 
@@ -51,7 +63,13 @@ export default class Register extends Component {
       callback();
     }
   };
-
+  checkPhoneNum = (rule, values, callback) => {
+    if (!values.match(/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/)) {
+      callback('请输入正确的手机号');
+    } else {
+      callback();
+    }
+  };
   formChange = (value) => {
     this.setState({
       value,
@@ -59,17 +77,71 @@ export default class Register extends Component {
   };
 
   handleSubmit = () => {
+    // TODO: 分离检验器的检查,使有用户名，邮箱，手机号中的一个加密码正确仅能够提交
+    // TODO: 如果用户用户名，邮箱，手机号选项框都填写了内容,应以用户选择的最后一个条件进行提交，其余清空
     this.refs.form.validateAll((errors, values) => {
       if (errors) {
         console.log('errors', errors);
         return;
       }
       console.log('values:', values);
-      Feedback.toast.success('注册成功');
-      // 注册成功后做对应的逻辑处理
+      /*
+      axios.post(REGISTER_API, {
+        username: this.state.value.account,
+        password: this.state.value.password,
+      }, { headers: { 'Content-Type': 'application/json' } }).then((response) => {
+        console.log(response);
+        console.log('values:', values);
+        this.setState({
+          visible: false,
+        });
+        Feedback.toast.success('注册成功');
+        createHashHistory().push('/page2');
+      }).catch((error) => {
+        console.log(error);
+        Feedback.toast.success(`注册失败${error}`);
+        this.setState({
+          visible: false,
+        });
+      });
+      */
     });
   };
-
+  onSelect(value) {
+    switch (value) {
+      case '用户名':
+        this.setState({
+          usernameIput: 'block',
+          emailIput: 'none',
+          phoneNumIput: 'none',
+          defaultValue: value,
+        });
+        break;
+      case '邮箱':
+        this.setState({
+          usernameIput: 'none',
+          emailIput: 'block',
+          phoneNumIput: 'none',
+          defaultValue: value,
+        });
+        break;
+      case '手机':
+        this.setState({
+          usernameIput: 'none',
+          emailIput: 'none',
+          phoneNumIput: 'block',
+          defaultValue: value,
+        });
+        break;
+      default:
+        this.setState({
+          usernameIput: 'block',
+          emailIput: 'none',
+          phoneNumIput: 'none',
+          defaultValue: RegisterData[0],
+        });
+    }
+  }
   render() {
     return (
       <div style={styles.container} className="user-register">
@@ -94,6 +166,16 @@ export default class Register extends Component {
             <div style={styles.formItems}>
               <Row style={styles.formItem}>
                 <Col style={styles.formItemCol}>
+                  <Select
+                    placeholder="选择注册方式"
+                    dataSource={RegisterData}
+                    onChange={this.onSelect.bind(this)}
+                    value={this.state.defaultValue}
+                  />
+                </Col>
+              </Row>
+              <Row style={{ ...styles.formItem, display: this.state.usernameIput }}>
+                <Col style={styles.formItemCol}>
                   <IceIcon
                     type="person"
                     size="small"
@@ -112,7 +194,7 @@ export default class Register extends Component {
                 </Col>
               </Row>
 
-              <Row style={styles.formItem}>
+              <Row style={{ ...styles.formItem, display: this.state.emailIput }}>
                 <Col style={styles.formItemCol}>
                   <IceIcon type="mail" size="small" style={styles.inputIcon} />
                   <IceFormBinder
@@ -128,7 +210,21 @@ export default class Register extends Component {
                   <IceFormError name="email" />
                 </Col>
               </Row>
-
+              <Row style={{ ...styles.formItem, display: this.state.phoneNumIput }}>
+                <Col style={styles.formItemCol}>
+                  <Icon type="mobile-phone" size="small" style={styles.inputIcon} />
+                  <IceFormBinder
+                    name="phoneNum"
+                    required
+                    validator={this.checkPhoneNum}
+                  >
+                    <Input size="large" maxLength={20} placeholder="手机号" />
+                  </IceFormBinder>
+                </Col>
+                <Col>
+                  <IceFormError name="phoneNum" />
+                </Col>
+              </Row>
               <Row style={styles.formItem}>
                 <Col style={styles.formItemCol}>
                   <IceIcon type="lock" size="small" style={styles.inputIcon} />
