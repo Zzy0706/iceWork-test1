@@ -80,8 +80,12 @@ export default class Login extends Component {
         this.setState({
           visible: false,
         });
-        Feedback.toast.success('登录成功');
-        createHashHistory().push('/page2');
+        if (response.data.bizCode !== 1) {
+          Feedback.toast.success(`登入失败${response.data.bizRemind}`);
+        } else {
+          Feedback.toast.success('登录成功');
+          createHashHistory().push('/page2');
+        }
       }).catch((error) => {
         console.log(error);
         Feedback.toast.success(`登录失败${error}`);

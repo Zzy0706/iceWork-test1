@@ -1,7 +1,7 @@
 /* eslint react/no-string-refs:0 */
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Input, Button, Grid, Feedback, Select, Icon } from '@icedesign/base';
+import { Input, Button, Grid, Feedback, Select, Icon, Loading } from '@icedesign/base';
 import {
   FormBinderWrapper as IceFormBinderWrapper,
   FormBinder as IceFormBinder,
@@ -34,11 +34,11 @@ export default class Register extends Component {
         passwd: '',
         rePasswd: '',
       },
-      usernameIput: 'block',
-      emailIput: 'none',
-      phoneNumIput: 'none',
+      usernameShow: true,
+      emailShow: false,
+      phoneShow: false,
       defaultValue: RegisterData[0],
-      visible: true,
+      visible: false,
     };
   }
 
@@ -71,6 +71,18 @@ export default class Register extends Component {
     }
   };
   formChange = (value) => {
+    if (this.state.usernameShow === true) {
+      delete value.email;
+      delete value.phoneNum;
+    }
+    if (this.state.emailShow === true) {
+      delete value.username;
+      delete value.phoneNum;
+    }
+    if (this.state.phoneShow === true) {
+      delete value.email;
+      delete value.username;
+    }
     this.setState({
       value,
     });
@@ -85,18 +97,43 @@ export default class Register extends Component {
         return;
       }
       console.log('values:', values);
-      /*
-      axios.post(REGISTER_API, {
-        username: this.state.value.account,
-        password: this.state.value.password,
-      }, { headers: { 'Content-Type': 'application/json' } }).then((response) => {
+      let dataStr;
+      switch (true) {
+        case this.state.usernameShow:
+          dataStr = {
+            username: this.state.value.username,
+            password: this.state.value.passwd,
+          };
+          break;
+        case this.state.emailShow:
+          dataStr = {
+            email: this.state.value.email,
+            password: this.state.value.passwd,
+          };
+          break;
+        case this.state.phoneShow:
+          dataStr = {
+            mobile: this.state.value.phoneNum,
+            password: this.state.value.passwd,
+          };
+          break;
+        default:
+          return;
+      }
+      this.setState({
+        visible: true,
+      });
+      axios.post(REGISTER_API, dataStr, { headers: { 'Content-Type': 'application/json' } }).then((response) => {
         console.log(response);
         console.log('values:', values);
         this.setState({
           visible: false,
         });
-        Feedback.toast.success('注册成功');
-        createHashHistory().push('/page2');
+        if (response.data.bizCode !== 1) {
+          Feedback.toast.success(`注册失败${response.data.bizError}`);
+        } else {
+          Feedback.toast.success('注册成功');
+        }
       }).catch((error) => {
         console.log(error);
         Feedback.toast.success(`注册失败${error}`);
@@ -104,191 +141,200 @@ export default class Register extends Component {
           visible: false,
         });
       });
-      */
     });
   };
   onSelect(value) {
     switch (value) {
       case '用户名':
         this.setState({
-          usernameIput: 'block',
-          emailIput: 'none',
-          phoneNumIput: 'none',
           defaultValue: value,
+          usernameShow: true,
+          emailShow: false,
+          phoneShow: false,
         });
         break;
       case '邮箱':
         this.setState({
-          usernameIput: 'none',
-          emailIput: 'block',
-          phoneNumIput: 'none',
+          usernameShow: false,
+          emailShow: true,
+          phoneShow: false,
           defaultValue: value,
         });
         break;
       case '手机':
         this.setState({
-          usernameIput: 'none',
-          emailIput: 'none',
-          phoneNumIput: 'block',
           defaultValue: value,
+          usernameShow: false,
+          emailShow: false,
+          phoneShow: true,
         });
         break;
       default:
         this.setState({
-          usernameIput: 'block',
-          emailIput: 'none',
-          phoneNumIput: 'none',
           defaultValue: RegisterData[0],
         });
     }
   }
+
   render() {
+    // TODO:React.js 控件隐藏写法
+    const userInputView = this.state.usernameShow ? (
+      <Row style={{ ...styles.formItem }}>
+        <Col style={styles.formItemCol}>
+          <IceIcon
+            type="person"
+            size="small"
+            style={styles.inputIcon}
+          />
+          <IceFormBinder
+            name="username"
+            required
+            message="请输入正确的用户名"
+          >
+            <Input size="large" placeholder="用户名" />
+          </IceFormBinder>
+        </Col>
+        <Col>
+          <IceFormError name="username" />
+        </Col>
+      </Row>) : null;
+      // TODO:React.js 控件隐藏写法
+    const emailIputView = this.state.emailShow ? (
+      <Row style={{ ...styles.formItem }}>
+        <Col style={styles.formItemCol}>
+          <IceIcon type="mail" size="small" style={styles.inputIcon} />
+          <IceFormBinder
+            type="email"
+            name="email"
+            required
+            message="请输入正确的邮箱"
+          >
+            <Input size="large" maxLength={20} placeholder="邮箱" />
+          </IceFormBinder>
+        </Col>
+        <Col>
+          <IceFormError name="email" />
+        </Col>
+      </Row>
+    ) : null;
+    const phoneIputView = this.state.phoneShow ? (
+      <Row style={{ ...styles.formItem }}>
+        <Col style={styles.formItemCol}>
+          <Icon type="mobile-phone" size="small" style={styles.inputIcon} />
+          <IceFormBinder
+            name="phoneNum"
+            required
+            validator={this.checkPhoneNum}
+          >
+            <Input size="large" maxLength={20} placeholder="手机号" />
+          </IceFormBinder>
+        </Col>
+        <Col>
+          <IceFormError name="phoneNum" />
+        </Col>
+      </Row>
+    ) : null;
     return (
+
       <div style={styles.container} className="user-register">
         <div style={styles.header}>
-          <a href="#" style={styles.meta}>
+          <a style={styles.meta}>
             <img
               style={styles.logo}
               src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png"
               alt="logo"
             />
-            <span style={styles.title}>飞冰</span>
+            <span style={styles.title}>滑冰</span>
           </a>
-          <p style={styles.desc}>飞冰让前端开发简单而友好</p>
+          <p style={styles.desc}>滑冰---体验滑的感觉</p>
         </div>
         <div style={styles.formContainer}>
-          <h4 style={styles.formTitle}>注 册</h4>
-          <IceFormBinderWrapper
-            value={this.state.value}
-            onChange={this.formChange}
-            ref="form"
-          >
-            <div style={styles.formItems}>
-              <Row style={styles.formItem}>
-                <Col style={styles.formItemCol}>
-                  <Select
-                    placeholder="选择注册方式"
-                    dataSource={RegisterData}
-                    onChange={this.onSelect.bind(this)}
-                    value={this.state.defaultValue}
-                  />
-                </Col>
-              </Row>
-              <Row style={{ ...styles.formItem, display: this.state.usernameIput }}>
-                <Col style={styles.formItemCol}>
-                  <IceIcon
-                    type="person"
-                    size="small"
-                    style={styles.inputIcon}
-                  />
-                  <IceFormBinder
-                    name="username"
-                    required
-                    message="请输入正确的用户名"
-                  >
-                    <Input size="large" placeholder="用户名" />
-                  </IceFormBinder>
-                </Col>
-                <Col>
-                  <IceFormError name="username" />
-                </Col>
-              </Row>
-
-              <Row style={{ ...styles.formItem, display: this.state.emailIput }}>
-                <Col style={styles.formItemCol}>
-                  <IceIcon type="mail" size="small" style={styles.inputIcon} />
-                  <IceFormBinder
-                    type="email"
-                    name="email"
-                    required
-                    message="请输入正确的邮箱"
-                  >
-                    <Input size="large" maxLength={20} placeholder="邮箱" />
-                  </IceFormBinder>
-                </Col>
-                <Col>
-                  <IceFormError name="email" />
-                </Col>
-              </Row>
-              <Row style={{ ...styles.formItem, display: this.state.phoneNumIput }}>
-                <Col style={styles.formItemCol}>
-                  <Icon type="mobile-phone" size="small" style={styles.inputIcon} />
-                  <IceFormBinder
-                    name="phoneNum"
-                    required
-                    validator={this.checkPhoneNum}
-                  >
-                    <Input size="large" maxLength={20} placeholder="手机号" />
-                  </IceFormBinder>
-                </Col>
-                <Col>
-                  <IceFormError name="phoneNum" />
-                </Col>
-              </Row>
-              <Row style={styles.formItem}>
-                <Col style={styles.formItemCol}>
-                  <IceIcon type="lock" size="small" style={styles.inputIcon} />
-                  <IceFormBinder
-                    name="passwd"
-                    required
-                    validator={this.checkPasswd}
-                  >
-                    <Input
-                      htmlType="password"
-                      size="large"
-                      placeholder="至少8位密码"
+          <Loading visible={this.state.visible} shape="fusion-reactor">
+            <h4 style={styles.formTitle}>注 册</h4>
+            <IceFormBinderWrapper
+              value={this.state.value}
+              onChange={this.formChange}
+              ref="form"
+            >
+              <div style={styles.formItems}>
+                <Row style={styles.formItem}>
+                  <Col style={styles.formItemCol}>
+                    <Select
+                      placeholder="选择注册方式"
+                      dataSource={RegisterData}
+                      onChange={this.onSelect.bind(this)}
+                      value={this.state.defaultValue}
                     />
-                  </IceFormBinder>
-                </Col>
-                <Col>
-                  <IceFormError name="passwd" />
-                </Col>
-              </Row>
+                  </Col>
+                </Row>
+                {userInputView}
+                {emailIputView}
+                {phoneIputView}
+                <Row style={styles.formItem}>
+                  <Col style={styles.formItemCol}>
+                    <IceIcon type="lock" size="small" style={styles.inputIcon} />
+                    <IceFormBinder
+                      name="passwd"
+                      required
+                      validator={this.checkPasswd}
+                    >
+                      <Input
+                        htmlType="password"
+                        size="large"
+                        placeholder="至少8位密码"
+                      />
+                    </IceFormBinder>
+                  </Col>
+                  <Col>
+                    <IceFormError name="passwd" />
+                  </Col>
+                </Row>
 
-              <Row style={styles.formItem}>
-                <Col style={styles.formItemCol}>
-                  <IceIcon type="lock" size="small" style={styles.inputIcon} />
-                  <IceFormBinder
-                    name="rePasswd"
-                    required
-                    validator={(rule, values, callback) =>
-                      this.checkPasswd2(
-                        rule,
-                        values,
-                        callback,
-                        this.state.value
-                      )
-                    }
+                <Row style={styles.formItem}>
+                  <Col style={styles.formItemCol}>
+                    <IceIcon type="lock" size="small" style={styles.inputIcon} />
+                    <IceFormBinder
+                      name="rePasswd"
+                      required
+                      validator={(rule, values, callback) =>
+                        this.checkPasswd2(
+                          rule,
+                          values,
+                          callback,
+                          this.state.value
+                        )
+                      }
+                    >
+                      <Input
+                        htmlType="password"
+                        size="large"
+                        placeholder="确认密码"
+                      />
+                    </IceFormBinder>
+                  </Col>
+                  <Col>
+                    <IceFormError name="rePasswd" />
+                  </Col>
+                </Row>
+
+                <Row style={styles.formItem}>
+                  <Button
+                    type="primary"
+                    onClick={this.handleSubmit}
+                    style={styles.submitBtn}
                   >
-                    <Input
-                      htmlType="password"
-                      size="large"
-                      placeholder="确认密码"
-                    />
-                  </IceFormBinder>
-                </Col>
-                <Col>
-                  <IceFormError name="rePasswd" />
-                </Col>
-              </Row>
+                    注 册
+                  </Button>
+                </Row>
 
-              <Row style={styles.formItem}>
-                <Button
-                  type="primary"
-                  onClick={this.handleSubmit}
-                  style={styles.submitBtn}
-                >
-                  注 册
-                </Button>
-              </Row>
-
-              <Row style={styles.tips}>
-                <a href="/" style={styles.link}>
-                  使用已有账户登录
-                </a>
-              </Row>
-            </div>
-          </IceFormBinderWrapper>
+                <Row style={styles.tips}>
+                  <a href="/" style={styles.link}>
+                    使用已有账户登录
+                  </a>
+                </Row>
+              </div>
+            </IceFormBinderWrapper>
+          </Loading>
         </div>
       </div>
     );
