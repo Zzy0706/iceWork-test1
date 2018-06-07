@@ -19,4 +19,4 @@
 * 页面文件: `src/pages`
 
 效果图:
-![screenshot](https://img.alicdn.com/tfs/TB1_Xf8m_tYBeNjy1XdXXXXyVXa-1920-1080.png)
+![screenshot](https://github.com/Zzy0706/MarkDownPhotos/raw/master/hbxgt.png)
