@@ -241,7 +241,7 @@ export default class Register extends Component {
           <a style={styles.meta}>
             <img
               style={styles.logo}
-              src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png"
+              src="https://github.com/Zzy0706/MarkDownPhotos/raw/master/hb.png"
               alt="logo"
             />
             <span style={styles.title}>滑冰</span>

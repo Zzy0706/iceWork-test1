@@ -101,15 +101,15 @@ export default class Login extends Component {
     return (
       <div style={styles.container} className="user-login">
         <div style={styles.header}>
-          <a href="#" style={styles.meta}>
+          <a style={styles.meta}>
             <img
               style={styles.logo}
-              src="https://img.alicdn.com/tfs/TB13UQpnYGYBuNjy0FoXXciBFXa-242-134.png"
+              src="https://github.com/Zzy0706/MarkDownPhotos/raw/master/hb.png"
               alt="logo"
             />
-            <span style={styles.title}>飞冰</span>
+            <span style={styles.title}>滑冰</span>
           </a>
-          <p style={styles.desc}>飞冰让前端开发简单而友好</p>
+          <p style={styles.desc}>滑冰---体验滑的感觉</p>
         </div>
         <div style={styles.formContainer}>
           <Loading visible={this.state.visible} shape="fusion-reactor">
@@ -203,6 +203,8 @@ const styles = {
     background: '#f0f2f5',
     backgroundImage:
       'url(https://img.alicdn.com/tfs/TB1kOoAqv1TBuNjy0FjXXajyXXa-600-600.png)',
+    /* backgroundRepeat: 'no-repeat',
+    backgroundSize: '100% 100%', */
   },
   header: {
     display: 'flex',
