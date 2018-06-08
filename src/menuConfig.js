@@ -6,18 +6,13 @@ const headerMenuConfig = [];
 
 const asideMenuConfig = [
   {
-    name: 'Nav2',
+    name: 'Weather',
     path: '/page2',
     icon: 'home',
   },
   {
-    name: 'loginPage',
-    path: '/loginPage',
-    icon: 'home',
-  },
-  {
-    name: 'registerPage',
-    path: '/registerPage',
+    name: 'Cool',
+    path: '/home',
     icon: 'home',
   },
 ];

@@ -1,4 +1,5 @@
 $page-container-width: 1200px;
+
 /* GLOBAL */
 html,
 body {
@@ -6,7 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.ice-design-header-aside-footer-responsive-layout-#{$theme} {
+.ice-design-header-aside-footer-layout-#{$theme} {
   .logo {
     max-width: 340px;
     height: 42px;
@@ -27,14 +28,45 @@ body {
   /* LAYOUT */
   &.ice-design-layout {
     width: 100%;
-    padding: 0 20px;
     background-color: $ice-layout-bg;
     background-size: 100%;
     background-repeat: no-repeat;
 
+    .theme-btn,
+    .menu-btn {
+      position: fixed;
+      margin-bottom: 0;
+      line-height: 40px;
+      text-align: center;
+      cursor: pointer;
+      color: $ice-toggle-btn-text-color;
+      background: $ice-toggle-btn-bg;
+      z-index: 9;
+      text-decoration: none;
+      &:hover {
+        color: #e7e7e7;
+      }
+    }
+
+    .theme-btn {
+      right: 0;
+      top: 82px;
+      width: 80px;
+      height: 40px;
+      border-radius: 6px 0 0 6px;
+    }
+
+    .menu-btn {
+      left: 0;
+      top: 82px;
+      width: 40px;
+      height: 40px;
+      border-radius: 0 6px 6px 0;
+    }
+
     /* HEADER */
     .ice-design-layout-header {
-      width: 100%;
+      width: $page-container-width;
       padding: 20px 0;
       margin: 0px auto;
       display: flex;
@@ -74,31 +106,13 @@ body {
     .ice-design-layout-aside {
       background: $ice-aside-bg;
 
-      .collapse-btn {
-        cursor: pointer;
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 20px;
-        color: $ice-collapse-btn-color;
-      }
-
       .ice-menu {
         background: $ice-aside-menu-bg;
-        transition: all 0.3s ease;
         &.ice-menu-inline .ice-icon-stable {
           font-weight: normal;
         }
       }
-      /* BODY */
-      .ice-design-layout-body {
-        width: $page-container-width;
-        margin: 0 auto;
-        .ice-layout-main {
-          padding: 0 0 0 20px;
-          overflow: hidden;
-        }
-      }
+
       .ice-menu.ice-menu-root.ice-menu-inline
         > .ice-menu-submenu
         > .ice-menu-submenu-title,
@@ -157,118 +171,39 @@ body {
         background: $ice-aside-menu-submenu-item-hover-bg;
         color: $ice-aside-text-hover-color;
       }
-
-      /* ASIDE COLLAPSED */
-      .ice-menu.ice-menu-collapse {
-        color: $ice-aside-collapse-menu-text-color;
-        > .ice-menu-item {
-          text-align: center;
-        }
-        .ice-menu-submenu {
-          &:hover {
-            transition: initial;
-            color: $ice-aside-menu-item-selected-text-color;
-            border-radius: 6px;
-            background-image: linear-gradient(
-              90deg,
-              $ice-aside-menu-item-selected-gradient-left-bg 0%,
-              $ice-aside-menu-item-selected-gradient-right-bg 100%
-            );
-          }
-        }
-        .ice-menu-sub {
-          background: #fff;
-        }
-        .ice-menu .ice-menu-item > a:hover {
-          color: $ice-aside-menu-collapse-selected-text-color;
-        }
-        .ice-menu-item-selected {
-          color: $ice-aside-menu-item-selected-text-color;
-          text-align: left;
-        }
-        .ice-menu .ice-menu-item:hover,
-        .ice-menu.ice-menu-horizontal > .ice-menu-item:hover,
-        .ice-menu.ice-menu-root > .ice-menu-item:hover {
-          color: $ice-aside-menu-collapse-selected-text-color;
-          background: transparent;
-        }
-      }
-
-      .ice-menu.ice-menu-collapse .ice-menu-submenu-title {
-        text-align: center;
-      }
-      .ice-menu.ice-menu-vertical .ice-icon-stable {
-        margin-right: 0;
-      }
-
-      .ice-menu.ice-menu-collapse
-        .ice-menu-submenu.ice-menu-submenu-active
-        > .ice-menu-submenu-title {
-        background: transparent;
-        color: #fff;
-        &:hover:before {
-          width: 0;
-        }
-      }
-
-      .ice-menu.ice-menu-collapse
-        > .ice-menu-submenu-active
-        > .ice-menu-submenu-title:before,
-      .ice-menu.ice-menu-collapse
-        > .ice-menu-submenu-selected
-        > .ice-menu-submenu-title:before,
-      .ice-menu.ice-menu-collapse .ice-menu-item:hover:before {
-        width: 0;
-      }
-
-      .ice-menu.ice-menu-collapse
-        .ice-menu:not(.ice-menu-horizontal)
-        .ice-menu-item-selected {
-        background: $ice-aside-menu-collapse-bg;
-        a {
-          color: $ice-aside-menu-collapse-selected-text-color;
-        }
-      }
-
-      .ice-menu.ice-menu-collapse
-        > .ice-menu-submenu-selected
-        > .ice-menu-submenu-title {
-        background-image: linear-gradient(
-          90deg,
-          $ice-aside-menu-item-selected-gradient-left-bg 0%,
-          $ice-aside-menu-item-selected-gradient-right-bg 100%
-        );
-        color: $ice-aside-menu-item-selected-text-color;
-        &:before {
-          width: 0;
-        }
-      }
     }
 
-    /* MAIN */
-    .ice-layout-main {
-      padding: 0 0 0 20px;
-      overflow: hidden;
+    /* BODY */
+    .ice-design-layout-body {
+      width: $page-container-width;
+      margin: 0 auto;
+      .ice-layout-main {
+        padding: 0 0 0 20px;
+        overflow: hidden;
+      }
     }
 
     /* FOOTER */
-    .ice-design-layout-footer-body {
-      width: 100%;
-      margin: 20px auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .copyright {
-        color: $ice-copyright-text-color;
-        line-height: 1.5;
-        font-size: 12px;
-        text-align: left;
-      }
-      .copyright-link {
-        color: $ice-copyright-text-color;
-        &:hover {
-          color: $ice-copyright-text-hover-color;
-          text-decoration: none;
+    .ice-design-layout-footer {
+      width: $page-container-width;
+      margin: 0 auto;
+      .ice-design-layout-footer-body {
+        margin: 20px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .copyright {
+          color: $ice-copyright-text-color;
+          line-height: 1.5;
+          font-size: 12px;
+          text-align: left;
+        }
+        .copyright-link {
+          color: $ice-copyright-text-color;
+          &:hover {
+            color: $ice-copyright-text-hover-color;
+            text-decoration: none;
+          }
         }
       }
     }
@@ -294,14 +229,8 @@ body {
   }
 }
 
-@media screen and (max-width: 1200px) {
-}
-
-@media screen and (max-width: 721px) and (min-width: 1199px) {
-}
-
-@media screen and (max-width: 720px) {
-  .ice-design-header-aside-footer-responsive-layout-#{$theme} {
+@media screen and (max-width: 1199px) {
+  .ice-design-header-aside-footer-layout-#{$theme} {
     .logo {
       width: 80px;
       .logo-text {
@@ -310,9 +239,11 @@ body {
     }
 
     &.ice-design-layout {
+      padding: 0 20px;
       .ice-design-layout-header {
+        width: 100%;
         .user-avatar {
-          margin-right: 4px;
+          margin-left: 4px;
         }
         .ice-design-header-userpannel {
           margin-left: 0;
@@ -324,33 +255,24 @@ body {
         }
       }
 
-      .ice-design-layout-aside {
-        position: fixed;
-        left: -240px;
-        top: 0px;
-        bottom: 0;
-        padding: 0 20px;
-        background: #2e323e;
-        z-index: 9999;
+      .ice-design-layout-body {
+        width: 100%;
+        .ice-layout-main {
+          padding: 0;
+        }
+        .ice-design-layout-aside {
+          position: fixed;
+          left: -240px;
+          top: 0px;
+          bottom: 0;
+          padding: 0 20px;
+          background: #2e323e;
+          z-index: 9999;
+        }
       }
 
-      .ice-layout-main {
-        padding: 0;
-      }
-
-      .menu-btn {
-        position: fixed;
-        left: 0;
-        top: 82px;
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0;
-        line-height: 40px;
-        border-radius: 0 6px 6px 0;
-        text-align: center;
-        cursor: pointer;
-        color: $ice-collapse-btn-color;
-        background: $ice-logo-text-color;
+      .ice-design-layout-footer {
+        width: 100%;
       }
 
       .open-drawer {

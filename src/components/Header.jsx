@@ -12,7 +12,6 @@ import Logo from './Logo';
 export default class Header extends PureComponent {
   render() {
     const { width, theme, isMobile, className, style } = this.props;
-
     return (
       <Layout.Header
         theme={theme}
@@ -115,7 +114,7 @@ export default class Header extends PureComponent {
                 </Link>
               </li>
               <li className="user-profile-menu-item">
-                <Link to="/">
+                <Link to="/loginPage">
                   <FoundationSymbol type="compass" size="small" />退出
                 </Link>
               </li>

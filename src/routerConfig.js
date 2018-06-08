@@ -5,7 +5,7 @@
 import BlankLayout from './layouts/BlankLayout';
 import Home from './pages/Home';
 import Page2 from './pages/Page2';
-import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout';
+import HeaderAsideFooterLayout from './layouts/HeaderAsideFooterLayout';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -13,13 +13,13 @@ import NotFound from './pages/NotFound';
 
 const routerConfig = [
   {
-    path: '/',
-    layout: BlankLayout,
+    path: '/home',
+    layout: HeaderAsideFooterLayout,
     component: Home,
   },
   {
     path: '/page2',
-    layout: HeaderAsideFooterResponsiveLayout,
+    layout: HeaderAsideFooterLayout,
     component: Page2,
   },
   {

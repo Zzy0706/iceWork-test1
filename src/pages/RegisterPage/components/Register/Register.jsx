@@ -17,6 +17,9 @@ const RegisterData = [
   '邮箱',
   '手机',
 ];
+  // 手机号码检测正则表达式
+const CHECK_PHONE_NUMBER = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
+
 export default class Register extends Component {
   static displayName = 'Register';
 
@@ -45,8 +48,8 @@ export default class Register extends Component {
   checkPasswd = (rule, values, callback) => {
     if (!values) {
       callback('请输入正确的密码');
-    } else if (values.length < 8) {
-      callback('密码必须大于8位');
+    } else if (values.length < 3) {
+      callback('密码必须大于3位');
     } else if (values.length > 16) {
       callback('密码必须小于16位');
     } else {
@@ -64,7 +67,7 @@ export default class Register extends Component {
     }
   };
   checkPhoneNum = (rule, values, callback) => {
-    if (!values.match(/^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/)) {
+    if (!values.match(CHECK_PHONE_NUMBER)) {
       callback('请输入正确的手机号');
     } else {
       callback();
@@ -281,7 +284,7 @@ export default class Register extends Component {
                       <Input
                         htmlType="password"
                         size="large"
-                        placeholder="至少8位密码"
+                        placeholder="至少3位密码"
                       />
                     </IceFormBinder>
                   </Col>
@@ -328,7 +331,7 @@ export default class Register extends Component {
                 </Row>
 
                 <Row style={styles.tips}>
-                  <a href="/" style={styles.link}>
+                  <a href="#/loginPage" style={styles.link}>
                     使用已有账户登录
                   </a>
                 </Row>
